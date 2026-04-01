@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <title>Registro Colaboradores</title>
+
+    <style>
+      body{
+        background-color: #30475E;
+      }
+
+      h1{
+        -webkit-text-stroke: 2px black;
+        color: white;
+        text-align: center;
+        font-family: 'Bebas Neue', cursive;
+        font-size: 50px;
+      }
+
+    </style>
+
+  </head>
+  <body>
+
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+      <div class="alert alert-dark" role="alert">
+        {{ message }}
+      </div>
+    </div>
+    {% endfor %}
+
+
+    <h1>Registro Colaboradores</h1>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width: 100%;height:80px;">
+      <div class="container-fluid d-flex align-items-center  d-flex justify-content-evenly">
+        <a class="navbar-brand" href="/inicio/">Inicio</a>
+        <div class="collapse navbar-collapse d-flex align-items-center" id="navbarNavAltMarkup" style="width:50%;">
+          <div class="navbar-nav">
+            <a class="nav-link" href="/migrantes/">Migrantes</a>
+            <a class="nav-link" href="/colaboradores/">Colaboradores</a>
+            <a class="nav-link" href="/actividades/">Actividades</a>
+            <a class="nav-link" href="/admin/">Admin</a>
+          
+          <!-- Modal para Agregar nuevos migrantes -->
+          <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Registrar Nuevo Colaborador</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body ">
+                          <form action="" method="POST">
+                              {% csrf_token %}
+                              <div class="mb-3">
+                                  <label class="form-label">Nombres</label>
+                                  <input type="text" class="form-control" name="nombres" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label class="form-label">Apellidos</label>
+                                  <input type="text" class="form-control" name="apellidos" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label class="form-label">Teléfono</label>
+                                  <input type="text" class="form-control" name="telefono" required>
+                              </div>
+                              <div class="mb-3">
+                                  <label class="form-label">Estado</label>
+                                  <select name="estado" class="form-select" aria-label="Default select example" >
+                                    {% for y in lista_estados %}
+                                    <option value=" {{y.id}} "> {{y.estado_disponible}} </option>
+                                    {% endfor %}
+                                  </select>
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label">Disponibilidad</label>
+                                <select name="disponibilidad" class="form-select" aria-label="Default select example" >
+                                  {% for z in lista_diasdisp %}
+                                  <option value=" {{z.id}} "> {{z.dias_disponible}} </option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                            <input type="hidden" name="comodin" value="agregar">
+
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          <button type="submit" class="btn btn-primary">Guardar</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+        <div>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+            Añadir Nuevo Colaborador
+          </button>
+        </div>
+      </div>
+    </nav>
+    <br><br>
+
+
+
+    <table class="table table-dark table-striped">
+      <thead>
+          <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Dias de Disponibilidad</th>
+              <th scope="col" style="width: 15%;"> Acción </th>
+          </tr>
+      </thead>
+      <tbody>
+
+          {%for x in datos_colaboradores%}
+          <tr>
+              <th scope="row">{{x.id}}</th>
+              <td>{{x.nombres}}</td>
+              <td>{{x.apellidos}}</td>
+              <td>{{x.telefono}}</td>
+              <td>{{x.estado_disponible}}</td>
+              <td>{{x.dias_disponible}}</td>
+            
+              <td>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{x.id}}">
+                      Eliminar
+                  </button>
+                  <!-- Modal para Eliminar Colaboradores -->                    
+                  <div class="modal fade" id="modalEliminar{{x.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black;">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              
+                              <div class="modal-body">
+                                  ¿Desea eliminar a {{x.nombres}} {{x.apellidos}} del sistema?
+                                  <form action="" method="GET">
+                                  <input type="hidden" name="id_Eliminar" value="{{x.id}}">   
+                              </div> 
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                  <button type="submit" class="btn btn-primary">Si</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!--Aquí empieza la función modificar-->
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#id_Modificar{{x.id}}">
+                      Modificar
+                  </button>
+
+                  <div class="modal fade" id="id_Modificar{{x.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black;">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Modificar Datos</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <form action="" method="POST">
+                                      {% csrf_token %}
+                                      <div class="mb-3">
+                                          <label class="form-label">Nombres</label>
+                                          <input type="text" class="form-control" name="nombres" value="{{x.nombres}}" required>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label class="form-label">Apellidos</label>
+                                          <input type="text" class="form-control" name="apellidos" value="{{x.apellidos}}" required>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label class="form-label">Teléfono</label>
+                                          <input type="text" class="form-control" name="telefono" value="{{x.telefono}}" required>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label class="form-label">Estado</label>
+                                          <select name="estado" class="form-select" aria-label="Default select example">
+                                            {% for y in lista_estados %}
+                                            <option value=" {{y.id}} "> {{y.estado_disponible}} </option>
+                                            {% endfor %}
+                                          </select>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label class="form-label">Disponibilidad</label>
+                                        <select name="disponibilidad" class="form-select" aria-label="Default select example">
+                                          {% for z in lista_diasdisp %}
+                                          <option value=" {{z.id}} "> {{z.dias_disponible}} </option>
+                                          {% endfor %}
+                                        </select>
+
+                                      <input type="hidden" name="comodin" value="modificar">
+                                      <input type="hidden", name="identificador", value="{{x.id}}">
+
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
