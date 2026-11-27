@@ -24,8 +24,8 @@ Aplicación web desarrollada con **Django** para la gestión administrativa de u
 
 ## Contexto y estado del proyecto
 
-- **Contexto:** Proyecto académico desarrollado en 2022 que conserva su implementación original con fines demostrativos (`DEBUG = True`, `ALLOWED_HOSTS = ['*']` y `SECRET_KEY` de ejemplo en `settings.py`; no está preparado para entornos de producción).
-- **Estado:** Finalizado (archivado para portafolio).
+- **Contexto:** Proyecto académico desarrollado en 2022 que conserva su implementación original con fines demostrativos (`DEBUG = True`, `ALLOWED_HOSTS = ['*']` y `SECRET_KEY` de ejemplo en `settings.py`). **No está preparado para entornos de producción.**
+- **Estado:** Finalizado (archivado para portafolio). La base de datos local `db.sqlite3` está excluida del repositorio mediante `.gitignore` y debe generarse localmente ejecutando las migraciones de Django (`python manage.py migrate`).
 
 ## Autor
 
